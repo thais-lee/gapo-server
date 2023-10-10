@@ -4,6 +4,9 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { AllConfigType } from 'src/config/config.type';
 
 @Injectable()
+/**
+ * Service responsible for creating the TypeORM configuration options based on the application configuration.
+ */
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService<AllConfigType>) {}
 
@@ -23,10 +26,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       keepConnectionAlive: true,
       logging:
         this.configService.get('app.nodeEnv', { infer: true }) !== 'production',
-      entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
+      entities: [__dirname + '/../modules/**/entities/*.entity{.ts,.js}'],
+      migrations: [__dirname + '/migrations/*.ts'],
       cli: {
-        entitiesDir: 'src',
+        entitiesDir: 'src/modules/**/entities/*.entity.ts',
         migrationsDir: 'src/database/migrations',
         subscribersDir: 'subscriber',
       },
